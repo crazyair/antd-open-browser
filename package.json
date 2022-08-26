@@ -8,7 +8,7 @@
   "license": "MIT",
   "commands": [
     {
-      "name": "antd",
+      "name": "index",
       "title": "antd",
       "subtitle": "副标题",
       "description": "描述2",
