@@ -1,24 +1,32 @@
-import { ActionPanel, Action, List } from "@raycast/api";
+import { List, ActionPanel, Action } from "@raycast/api";
+import dataJSON from "./data.json";
+import { getComponentUrl } from "./utils";
 
-// const baseUrl = "https://ant-design.antgroup.com/components";
-const list = [
-  { label: "全部", url: "https://ant-design.antgroup.com/components/overview-cn/" },
-  { label: "按钮", url: "https://ant-design.antgroup.com/components/overview-cn/" },
-];
+type dataType = {
+  type: string;
+  title: string;
+  children: { category: string; title: string; type: string; filename: string; subtitle?: string; cover?: string }[];
+};
+const list: dataType[] = dataJSON;
 
 export default function Command() {
   return (
-    <List>
-      {list.map((item) => (  
-        <List.Item
-          title={item.label}
-          key={item.label}
-          actions={
-            <ActionPanel>
-              <Action.OpenInBrowser url={item.url} />
-            </ActionPanel>
-          }
-        />
+    <List isShowingDetail>
+      {list.map((item) => (
+        <List.Section key={item.title} title={item.title}>
+          {item.children.map((child) => (
+            <List.Item
+              title={`${child.title} ${child.subtitle || ""}`}
+              key={child.title}
+              detail={child.cover && <List.Item.Detail markdown={`![Illustration](${child.cover})`} />}
+              actions={
+                <ActionPanel>
+                  <Action.OpenInBrowser url={getComponentUrl(child.filename)} />
+                </ActionPanel>
+              }
+            />
+          ))}
+        </List.Section>
       ))}
     </List>
   );
